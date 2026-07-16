@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# «فَزَوِّجُوهُ»
 
-## Getting Started
+منصة لتيسير الزواج الشرعي — تُعرِّف الراغبين والراغبات بشروط واضحة وإشراف إداري، بعيدًا عن المحرّم.
 
-First, run the development server:
+## Stack
+
+- Next.js 16 (App Router, TS) + React 19
+- Convex (backend, database, functions)
+- Better Auth (`better-auth` + `@convex-dev/better-auth`)
+- Tailwind v4 (CSS-first `@theme`, no `tailwind.config`)
+- shadcn (`base-nova` style, built on `@base-ui/react`)
+
+## Local development
 
 ```bash
+npm install
+
+# terminal 1 — Convex dev deployment + function watcher
+npx convex dev
+
+# terminal 2 — Next.js dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`npx convex dev` provisions a dev deployment and writes `CONVEX_DEPLOYMENT`,
+`NEXT_PUBLIC_CONVEX_URL`, and `NEXT_PUBLIC_CONVEX_SITE_URL` into `.env.local`
+automatically — no manual setup needed.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## First admin
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Register an account at `/register`, then promote it via the Convex CLI.
+See [`docs/admin-setup.md`](docs/admin-setup.md) for the full walkthrough.
 
-## Learn More
+## Project layout
 
-To learn more about Next.js, take a look at the following resources:
+- `convex/` — schema, functions, and auth wiring (server-side source of truth
+  and enforcement; see `convex/_generated/ai/guidelines.md` before editing)
+- `lib/forms/questions.ts` — the application form questions, per gender
+  (**product-owner-editable config**)
+- `lib/content/ar.ts` — Arabic copy: intros, oath text, publish consent,
+  conditions lists (**product-owner-editable content**)
+- `app/` — routes (`/`, `/browse`, `/forms/[shortCode]`, `/apply`,
+  `/account`, `/chat`, `/login`, `/register`, `/admin`, …)
+- `components/` — shared UI (site header/footer, seal, shadcn primitives)
+- `docs/` — operational docs (admin setup, deployment)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ⚠️ Placeholder content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`lib/forms/questions.ts` and `lib/content/ar.ts` currently contain
+**placeholder** questions, oath text, and conditions. These MUST be replaced
+verbatim from the initiative's official source document before launch — do
+not ship with placeholder wording live.

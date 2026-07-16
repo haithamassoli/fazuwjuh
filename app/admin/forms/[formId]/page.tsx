@@ -242,7 +242,7 @@ export default function AdminFormDetailPage({
         href="/admin/forms"
         className="text-sm text-khaki hover:text-ink hover:underline"
       >
-        ← عودة إلى الاستمارات
+        → عودة إلى الاستمارات
       </Link>
 
       <div className="mt-4 flex flex-wrap items-center gap-4">

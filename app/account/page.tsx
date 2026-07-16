@@ -1,11 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "convex/react";
+import { useState } from "react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Doc } from "@/convex/_generated/dataModel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Seal } from "@/components/seal";
 import { QUESTIONS, type Question } from "@/lib/forms/questions";
 
@@ -130,6 +141,99 @@ function FormCard({ form }: { form: Doc<"forms"> }) {
   );
 }
 
+function errorText(e: unknown): string {
+  // Convex wraps thrown server errors as "... Uncaught Error: <message>".
+  const message = e instanceof Error ? e.message : "";
+  const match = message.match(/Uncaught Error:\s*([^\n]+)/);
+  return match ? match[1].trim() : "تعذّر إرسال طلب الحذف — أعد المحاولة.";
+}
+
+function DeletionSection() {
+  const pendingRequest = useQuery(api.deletion.myDeletionRequest);
+  const requestDeletion = useMutation(api.deletion.requestDeletion);
+  const [open, setOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function confirm() {
+    setBusy(true);
+    setError("");
+    try {
+      await requestDeletion();
+      setOpen(false);
+    } catch (e) {
+      setError(errorText(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="mt-12 border-t border-sand pt-8">
+      <h2 className="text-lg font-bold text-seal">منطقة الحذف</h2>
+      <p className="mt-2 max-w-prose text-sm leading-6 text-khaki">
+        يُخفي طلبُ الحذف استمارتك فورًا، وتحذف الإدارة بياناتك نهائيًا:
+        الاستمارة والاهتمامات والمحادثة والحساب
+      </p>
+
+      {pendingRequest === undefined ? (
+        <p className="mt-4 text-sm text-khaki">…جارٍ التحميل</p>
+      ) : pendingRequest ? (
+        <div className="mt-4 rounded-md border border-sand bg-sand-light p-4">
+          <p className="text-sm leading-6 text-khaki">
+            طلب الحذف قيد التنفيذ لدى الإدارة
+          </p>
+        </div>
+      ) : (
+        <>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger
+              render={
+                <Button
+                  variant="outline"
+                  className="mt-4 h-11 border-seal px-5 text-seal hover:bg-seal/5 hover:text-seal"
+                />
+              }
+            >
+              اطلب حذف بياناتي
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>طلب حذف البيانات</DialogTitle>
+                <DialogDescription>
+                  ستُخفى استمارتك فورًا من التصفح، ثم تحذف الإدارة بياناتك
+                  نهائيًا: الاستمارة، والاهتمامات، والمحادثة، والحساب. هذا
+                  الإجراء لا يمكن التراجع عنه بعد تنفيذه.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose
+                  render={<Button variant="outline" className="h-11 px-4" />}
+                >
+                  إلغاء
+                </DialogClose>
+                <Button
+                  variant="destructive"
+                  className="h-11 px-6"
+                  disabled={busy}
+                  onClick={confirm}
+                >
+                  {busy ? "…جارٍ الإرسال" : "تأكيد طلب الحذف"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          {error ? (
+            <div className="mt-4 rounded-md border border-seal/30 bg-seal/5 p-4">
+              <p className="text-sm leading-6 text-seal">{error}</p>
+            </div>
+          ) : null}
+        </>
+      )}
+    </section>
+  );
+}
+
 export default function AccountPage() {
   const me = useQuery(api.users.me);
   const form = useQuery(api.forms.getMyForm, me ? {} : "skip");
@@ -186,6 +290,8 @@ export default function AccountPage() {
             <FormCard form={form} />
           )}
         </div>
+
+        <DeletionSection />
       </div>
     </section>
   );

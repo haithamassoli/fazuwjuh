@@ -65,10 +65,10 @@ Goal: real-time mediation channel; registration alone is enough to chat.
 ## M8 — Data deletion, QA & launch
 Goal: deletion pipeline works end-to-end; platform ready for real users.
 
-- [ ] «طلب حذف بياناتي» in `/account`: form → `archived` immediately + create a `deletionRequests` entry
-- [ ] Admin deletions queue: execute = permanently delete form, interests, thread + messages, and account
-- [ ] QA sweep: every visibility rule verified server-side, all state changes admin-only, no direct applicant-to-applicant contact anywhere, RTL/Arabic copy review, mobile layout, empty/error states
-- [ ] Replace placeholder questions and texts with the product owner's final content
+- [x] «طلب حذف بياناتي» in `/account`: form → `archived` immediately + create a `deletionRequests` entry
+- [x] Admin deletions queue: execute = permanently delete form, interests, thread + messages, and account
+- [x] QA sweep: every visibility rule verified server-side, all state changes admin-only, no direct applicant-to-applicant contact anywhere, RTL/Arabic copy review, mobile layout, empty/error states
+- [ ] Replace placeholder questions and texts with the product owner's final content — **blocked: needs the initiative's source document** (edit `lib/content/ar.ts` + `lib/forms/questions.ts`)
 - [ ] Deploy: Convex production + hosting, env vars, smoke test
 
 ## Out of scope (v1)
