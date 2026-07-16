@@ -42,10 +42,10 @@ Goal: admin reviews forms; lifecycle `pending → published | rejected` works, i
 ## M5 — Public browse
 Goal: visitors browse published forms with filters; name + phone never leave the server.
 
-- [ ] Public Convex queries return only `published` forms and always strip name + phone server-side
-- [ ] `/browse`: male/female tabs; summary cards with shortCode, age, marital status, المطلوب, residence, dress, nationality
-- [ ] Filters: age range, residence, marital status; sorted newest-published first
-- [ ] `/forms/[shortCode]`: all answers grouped by section (minus name/phone); not found unless status is `published`
+- [x] Public Convex queries return only `published` forms and always strip name + phone server-side
+- [x] `/browse`: male/female tabs; summary cards with shortCode, age, marital status, المطلوب, residence, dress, nationality
+- [x] Filters: age range, residence, marital status; sorted newest-published first
+- [x] `/forms/[shortCode]`: all answers grouped by section (minus name/phone); not found unless status is `published`
 - [ ] «إبداء اهتمام» button: guests → login prompt; users without a published form → explanatory message
 
 ## M6 — Interests & matching
