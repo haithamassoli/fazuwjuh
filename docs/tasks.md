@@ -22,12 +22,12 @@ Goal: email + password accounts with user/admin roles enforced server-side.
 ## M3 — Form submission
 Goal: a registered user completes the wizard and submits one form (status `pending`).
 
-- [ ] Question config file per type (male/female): id, label, field type, options, group, showInSummaryCard — placeholder questions until the product owner delivers the final list
-- [ ] Static content files: intros, oath (القسَم), publish consent, conditions (11 male / 12 female) — verbatim from the source document
-- [ ] `/apply` wizard: type → intro → oath (required consent) → publish consent → conditions (required consent) → questions; blocked if the account already has a form
-- [ ] Link to «واعي» page shown at condition 11 in the male form
-- [ ] `createForm` mutation: one form per account, name + phone required, unique shortCode generated (e.g. `853n`), status `pending`
-- [ ] `/account`: show own form, its status and rejection reason, with an edit entry point
+- [x] Question config file per type (male/female): id, label, field type, options, group, showInSummaryCard — placeholder questions until the product owner delivers the final list
+- [x] Static content files: intros, oath (القسَم), publish consent, conditions (11 male / 12 female) — placeholders pending the source document (final swap tracked in M8)
+- [x] `/apply` wizard: type → intro → oath (required consent) → publish consent → conditions (required consent) → questions; blocked if the account already has a form
+- [x] Link to «واعي» page shown at condition 11 in the male form
+- [x] `createForm` mutation: one form per account, name + phone required, unique shortCode generated (e.g. `853n`), status `pending`
+- [x] `/account`: show own form, its status and rejection reason, with an edit entry point
 
 ## M4 — Admin review & form lifecycle
 Goal: admin reviews forms; lifecycle `pending → published | rejected` works, including published-edit flow.
