@@ -32,12 +32,12 @@ Goal: a registered user completes the wizard and submits one form (status `pendi
 ## M4 — Admin review & form lifecycle
 Goal: admin reviews forms; lifecycle `pending → published | rejected` works, including published-edit flow.
 
-- [ ] `/admin` layout gated by `requireAdmin`; nav for forms, edit requests, interests, chats, deletions
-- [ ] Forms lists by status (pending / published / rejected / matched / archived)
-- [ ] Admin form detail: all answers **including name + phone**; approve → `published`, reject → `rejected` with a reason
-- [ ] Owner edit of a pending/rejected form: replaces answers and resets status to `pending`
-- [ ] Owner edit of a published form: saved to `pendingAnswers`; published version stays live
-- [ ] Admin pending-edits queue with a simple old/new diff; approve (replace answers) or reject (keep old, discard `pendingAnswers`)
+- [x] `/admin` layout gated by `requireAdmin`; nav for forms, edit requests, interests, chats, deletions
+- [x] Forms lists by status (pending / published / rejected / matched / archived)
+- [x] Admin form detail: all answers **including name + phone**; approve → `published`, reject → `rejected` with a reason
+- [x] Owner edit of a pending/rejected form: replaces answers and resets status to `pending`
+- [x] Owner edit of a published form: saved to `pendingAnswers`; published version stays live
+- [x] Admin pending-edits queue with a simple old/new diff; approve (replace answers) or reject (keep old, discard `pendingAnswers`)
 
 ## M5 — Public browse
 Goal: visitors browse published forms with filters; name + phone never leave the server.
