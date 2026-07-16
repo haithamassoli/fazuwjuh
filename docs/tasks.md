@@ -14,10 +14,10 @@ Goal: app boots in Arabic RTL with the full data model in place.
 ## M2 — Auth & roles
 Goal: email + password accounts with user/admin roles enforced server-side.
 
-- [ ] Email + password auth via the better-auth Convex component (no OTP): register, login, logout
-- [ ] `/register` and `/login` pages in Arabic with validation errors
-- [ ] `role: "user" | "admin"` on users; `requireUser` / `requireAdmin` helpers used by every non-public Convex function
-- [ ] Promote the first admin manually via the Convex dashboard (document the steps)
+- [x] Email + password auth via the better-auth Convex component (no OTP): register, login, logout
+- [x] `/register` and `/login` pages in Arabic with validation errors
+- [x] `role: "user" | "admin"` on users; `requireUser` / `requireAdmin` helpers used by every non-public Convex function
+- [x] Promote the first admin manually via `npx convex run users:promote` (documented in docs/admin-setup.md)
 
 ## M3 — Form submission
 Goal: a registered user completes the wizard and submits one form (status `pending`).
