@@ -19,6 +19,8 @@ const USER_NAV = [
 export function SiteHeader() {
   const router = useRouter();
   const me = useQuery(api.users.me);
+  const thread = useQuery(api.chat.myThread, me ? {} : "skip");
+  const hasUnread = (thread?.userUnread ?? 0) > 0;
   const nav = me ? [...PUBLIC_NAV, ...USER_NAV] : PUBLIC_NAV;
 
   async function onSignOut() {
@@ -44,6 +46,12 @@ export function SiteHeader() {
               className="rounded-md px-3 py-2.5 text-ink hover:bg-muted hover:text-olive-deep"
             >
               {item.label}
+              {item.href === "/chat" && hasUnread ? (
+                <span
+                  aria-label="لديك رسائل غير مقروءة"
+                  className="ms-1.5 inline-block size-2 rounded-full bg-seal align-middle"
+                />
+              ) : null}
             </Link>
           ))}
         </nav>

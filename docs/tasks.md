@@ -58,9 +58,9 @@ Goal: interest requests flow to the admin board; a manual match closes everythin
 ## M7 — Chat (user ↔ admin)
 Goal: real-time mediation channel; registration alone is enough to chat.
 
-- [ ] `/chat`: one thread per user with the admin, real-time messages (Convex), thread auto-created on first message
-- [ ] Admin inbox: threads sorted by `lastMessageAt`, unread badges, thread view with reply
-- [ ] Unread indicator in both directions; mark as read on open
+- [x] `/chat`: one thread per user with the admin, real-time messages (Convex), thread auto-created on first message
+- [x] Admin inbox: threads sorted by `lastMessageAt`, unread badges, thread view with reply
+- [x] Unread indicator in both directions; mark as read on open
 
 ## M8 — Data deletion, QA & launch
 Goal: deletion pipeline works end-to-end; platform ready for real users.
