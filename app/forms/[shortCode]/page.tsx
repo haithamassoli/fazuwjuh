@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { use, useState } from "react";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 import { Seal } from "@/components/seal";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,66 +39,178 @@ function NotFoundCard() {
   );
 }
 
-function InterestArea({ formId }: { formId: string }) {
-  const me = useQuery(api.users.me);
-  const [guestDialogOpen, setGuestDialogOpen] = useState(false);
-  void formId; // M6: wire api.interests.express with { toFormId: formId }
+/** يستخرج رسالة الخطأ العربية من خطأ Convex؛ يعيد null إذا لم توجد. */
+function arabicErrorMessage(error: unknown): string | null {
+  if (!(error instanceof Error)) return null;
+  const match = error.message.match(/Uncaught Error:\s*([^\n]+)/);
+  const message = (match ? match[1] : error.message).trim();
+  return /[؀-ۿ]/.test(message) ? message : null;
+}
 
-  if (me === undefined) {
+function InterestArea({
+  formId,
+  formType,
+}: {
+  formId: Id<"forms">;
+  formType: "male" | "female";
+}) {
+  const me = useQuery(api.users.me);
+  const myForm = useQuery(api.forms.getMyForm, me ? {} : "skip");
+  const myInterest = useQuery(
+    api.interests.myInterestIn,
+    me ? { toFormId: formId } : "skip",
+  );
+  const express = useMutation(api.interests.express);
+  const [guestDialogOpen, setGuestDialogOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  if (
+    me === undefined ||
+    (me !== null && (myForm === undefined || myInterest === undefined))
+  ) {
     return null;
+  }
+
+  async function confirmInterest() {
+    setPending(true);
+    setError(null);
+    try {
+      await express({ toFormId: formId });
+      // نجاح: myInterestIn سيتحدّث تفاعليًا وتظهر حالة التأكيد
+    } catch (err) {
+      setError(
+        arabicErrorMessage(err) ??
+          "تعذّر إرسال الاهتمام. أعد المحاولة، وإن تكرر الخطأ راسل الإدارة.",
+      );
+    } finally {
+      setPending(false);
+      setConfirmOpen(false);
+    }
+  }
+
+  let body: React.ReactNode;
+  if (me === null) {
+    body = (
+      <>
+        <Button
+          className="h-11 min-w-56 text-base"
+          onClick={() => setGuestDialogOpen(true)}
+        >
+          أبدِ اهتمامًا
+        </Button>
+        <Dialog open={guestDialogOpen} onOpenChange={setGuestDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>سجّل الدخول أولًا</DialogTitle>
+              <DialogDescription className="leading-6">
+                إبداء الاهتمام متاح للمسجّلين في المبادرة فقط، حفاظًا على
+                خصوصية أصحاب الاستمارات. ادخل إلى حسابك أو أنشئ حسابًا جديدًا
+                ثم عد إلى هذه الاستمارة.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2">
+              <Button
+                render={<Link href="/login" />}
+                nativeButton={false}
+                className="h-10"
+              >
+                دخول
+              </Button>
+              <Button
+                render={<Link href="/register" />}
+                nativeButton={false}
+                variant="outline"
+                className="h-10"
+              >
+                إنشاء حساب
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
+  } else if (myForm?._id === formId) {
+    body = <p className="text-sm text-khaki">هذه استمارتك</p>;
+  } else if (!myForm || myForm.status !== "published") {
+    body = (
+      <>
+        <Button disabled className="h-11 min-w-56 text-base">
+          أبدِ اهتمامًا
+        </Button>
+        <p className="mt-3 text-sm text-khaki">
+          يتطلب إبداء الاهتمام أن تكون لديك استمارة منشورة{" "}
+          <Link
+            href={myForm ? "/account" : "/apply"}
+            className="text-olive underline underline-offset-4 hover:text-olive-deep"
+          >
+            {myForm ? "تابع حالة استمارتك" : "قدّم استمارتك"}
+          </Link>
+        </p>
+      </>
+    );
+  } else if (myInterest !== null) {
+    body = (
+      <p className="rounded-md border border-olive/40 bg-olive/5 px-4 py-3 text-sm leading-6 text-olive-deep">
+        تم إرسال اهتمامك إلى الإدارة، وستتولى التنسيق
+      </p>
+    );
+  } else if (myForm.type === formType) {
+    body = (
+      <p className="text-sm text-khaki">
+        إبداء الاهتمام متاح للاستمارات من النوع الآخر فقط
+      </p>
+    );
+  } else {
+    body = (
+      <>
+        <Button
+          className="h-11 min-w-56 text-base"
+          onClick={() => setConfirmOpen(true)}
+        >
+          أبدِ اهتمامًا
+        </Button>
+        <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>تأكيد إبداء الاهتمام</DialogTitle>
+              <DialogDescription className="leading-6">
+                سيصل اهتمامك إلى إدارة المبادرة لتتولى الوساطة بين الطرفين —
+                لا يُشارك اسمك أو هاتفك مع الطرف الآخر.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="gap-2">
+              <Button
+                className="h-10"
+                disabled={pending}
+                onClick={confirmInterest}
+              >
+                {pending ? "…جارٍ الإرسال" : "تأكيد الاهتمام"}
+              </Button>
+              <Button
+                variant="outline"
+                className="h-10"
+                disabled={pending}
+                onClick={() => setConfirmOpen(false)}
+              >
+                إلغاء
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </>
+    );
   }
 
   return (
     <div className="mt-10 border-t border-sand pt-8 text-center">
-      {me === null ? (
-        <>
-          <Button
-            className="h-11 min-w-56 text-base"
-            onClick={() => setGuestDialogOpen(true)}
-          >
-            أبدِ اهتمامًا
-          </Button>
-          <Dialog open={guestDialogOpen} onOpenChange={setGuestDialogOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>سجّل الدخول أولًا</DialogTitle>
-                <DialogDescription className="leading-6">
-                  إبداء الاهتمام متاح للمسجّلين في المبادرة فقط، حفاظًا على
-                  خصوصية أصحاب الاستمارات. ادخل إلى حسابك أو أنشئ حسابًا جديدًا
-                  ثم عد إلى هذه الاستمارة.
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter className="gap-2">
-                <Button
-                  render={<Link href="/login" />}
-                  nativeButton={false}
-                  className="h-10"
-                >
-                  دخول
-                </Button>
-                <Button
-                  render={<Link href="/register" />}
-                  nativeButton={false}
-                  variant="outline"
-                  className="h-10"
-                >
-                  إنشاء حساب
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </>
-      ) : (
-        <>
-          {/* M6: wire api.interests.express */}
-          <Button disabled className="h-11 min-w-56 text-base">
-            أبدِ اهتمامًا
-          </Button>
-          <p className="mt-3 text-sm text-khaki">
-            سيُفعَّل إبداء الاهتمام قريبًا
-          </p>
-        </>
+      {error === null ? null : (
+        <p className="mb-4 rounded-md border border-seal/40 bg-seal/5 px-4 py-3 text-sm leading-6 text-seal">
+          {error}
+        </p>
       )}
+      {body}
     </div>
   );
 }
@@ -156,7 +269,7 @@ export default function FormDetailPage({
             </section>
           ))}
 
-          <InterestArea formId={form.formId} />
+          <InterestArea formId={form.formId} formType={form.type} />
         </article>
       )}
     </section>

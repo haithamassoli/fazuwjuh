@@ -46,14 +46,14 @@ Goal: visitors browse published forms with filters; name + phone never leave the
 - [x] `/browse`: male/female tabs; summary cards with shortCode, age, marital status, المطلوب, residence, dress, nationality
 - [x] Filters: age range, residence, marital status; sorted newest-published first
 - [x] `/forms/[shortCode]`: all answers grouped by section (minus name/phone); not found unless status is `published`
-- [ ] «إبداء اهتمام» button: guests → login prompt; users without a published form → explanatory message
+- [x] «إبداء اهتمام» button: guests → login prompt; users without a published form → explanatory message
 
 ## M6 — Interests & matching
 Goal: interest requests flow to the admin board; a manual match closes everything correctly.
 
-- [ ] `expressInterest` mutation enforcing: sender has a published form, target is published and of the opposite type, no existing open interest for the same pair (composite index)
-- [ ] Admin interests board: `new → in_progress → closed_matched | closed_rejected`, with direct links to both parties' chat threads
-- [ ] Match announcement action: create `matches` record, set both forms to `matched` (they vanish from browse), auto-close every open interest touching either form
+- [x] `expressInterest` mutation enforcing: sender has a published form, target is published and of the opposite type, no existing open interest for the same pair (composite index)
+- [x] Admin interests board: `new → in_progress → closed_matched | closed_rejected`, with direct links to both parties' chat threads
+- [x] Match announcement action: create `matches` record, set both forms to `matched` (they vanish from browse), auto-close every open interest touching either form
 
 ## M7 — Chat (user ↔ admin)
 Goal: real-time mediation channel; registration alone is enough to chat.
