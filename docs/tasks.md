@@ -69,7 +69,7 @@ Goal: deletion pipeline works end-to-end; platform ready for real users.
 - [x] Admin deletions queue: execute = permanently delete form, interests, thread + messages, and account
 - [x] QA sweep: every visibility rule verified server-side, all state changes admin-only, no direct applicant-to-applicant contact anywhere, RTL/Arabic copy review, mobile layout, empty/error states
 - [ ] Replace placeholder questions and texts with the product owner's final content — **blocked: needs the initiative's source document** (edit `lib/content/ar.ts` + `lib/forms/questions.ts`)
-- [ ] Deploy: Convex production + hosting, env vars, smoke test
+- [x] Deploy: Convex production (`quixotic-bison-382`) + Vercel (https://fazuwjuh.vercel.app), env vars, browser smoke test (auth round-trip + realtime chat)
 
 ## Out of scope (v1)
 OTP / identity verification, photos, email/push notifications, multi-admin roles, advanced text search, in-panel form builder, mobile app.
