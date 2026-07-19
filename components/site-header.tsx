@@ -11,21 +11,22 @@ const PUBLIC_NAV = [
   { href: "/apply", label: "قدّم استمارتك" },
 ] as const;
 
-const USER_NAV = [
-  { href: "/account", label: "حسابي" },
-  { href: "/chat", label: "المحادثة" },
-] as const;
+const ACCOUNT_NAV = { href: "/account", label: "حسابي" } as const;
+const CHAT_NAV = { href: "/chat", label: "المحادثة" } as const;
+const ADMIN_NAV = { href: "/admin", label: "لوحة الإدارة" } as const;
 
 export function SiteHeader() {
   const router = useRouter();
   const me = useQuery(api.users.me);
-  const thread = useQuery(api.chat.myThread, me ? {} : "skip");
+  const isAdmin = me?.role === "admin";
+  // Admins have no personal thread — their chats live in /admin/chats.
+  const thread = useQuery(api.chat.myThread, me && !isAdmin ? {} : "skip");
   const hasUnread = (thread?.userUnread ?? 0) > 0;
-  const nav = me
-    ? me.role === "admin"
-      ? [...PUBLIC_NAV, ...USER_NAV, { href: "/admin", label: "لوحة الإدارة" }]
-      : [...PUBLIC_NAV, ...USER_NAV]
-    : PUBLIC_NAV;
+  const nav = !me
+    ? PUBLIC_NAV
+    : isAdmin
+      ? [...PUBLIC_NAV, ACCOUNT_NAV, ADMIN_NAV]
+      : [...PUBLIC_NAV, ACCOUNT_NAV, CHAT_NAV];
 
   async function onSignOut() {
     await authClient.signOut();

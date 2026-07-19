@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +21,16 @@ export default function LoginPage() {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [signedIn, setSignedIn] = useState(false);
+  // After sign-in, wait for Convex auth to resolve `me` (truthy = authenticated),
+  // then route by role — admins straight to the dashboard, no /account flash.
+  const me = useQuery(api.users.me, signedIn ? {} : "skip");
+
+  useEffect(() => {
+    if (signedIn && me) {
+      router.replace(me.role === "admin" ? "/admin/forms" : "/account");
+    }
+  }, [signedIn, me, router]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,7 +45,7 @@ export default function LoginPage() {
       setError(arabicError(result.error));
       setPending(false);
     } else {
-      router.push("/account");
+      setSignedIn(true); // keep pending; the effect redirects once role is known
     }
   }
 
