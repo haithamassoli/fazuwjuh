@@ -93,10 +93,11 @@ export const clearJwks = internalMutation({
     let cursor: string | null = null;
     let deleted = 0;
     while (true) {
-      const res = await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
-        input: { model: "jwks" },
-        paginationOpts: { numItems: 200, cursor },
-      });
+      const res: { isDone: boolean; continueCursor: string; count: number } =
+        await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
+          input: { model: "jwks" },
+          paginationOpts: { numItems: 200, cursor },
+        });
       deleted += res.count;
       if (res.isDone) {
         break;
