@@ -21,7 +21,11 @@ export function SiteHeader() {
   const me = useQuery(api.users.me);
   const thread = useQuery(api.chat.myThread, me ? {} : "skip");
   const hasUnread = (thread?.userUnread ?? 0) > 0;
-  const nav = me ? [...PUBLIC_NAV, ...USER_NAV] : PUBLIC_NAV;
+  const nav = me
+    ? me.role === "admin"
+      ? [...PUBLIC_NAV, ...USER_NAV, { href: "/admin", label: "لوحة الإدارة" }]
+      : [...PUBLIC_NAV, ...USER_NAV]
+    : PUBLIC_NAV;
 
   async function onSignOut() {
     await authClient.signOut();
