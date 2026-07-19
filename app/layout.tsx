@@ -17,10 +17,26 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const description =
+  "مبادرة للتوسّط في الزواج وفق أحكام الشرع، تجمع بين الراغبين في الزواج بخصوصية تامة وبإشراف وسيط أمين.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL("https://fazuwjuh.assoli.site"),
   title: "فَزَوِّجُوهُ",
-  description:
-    "مبادرة للتوسّط في الزواج وفق أحكام الشرع، تجمع بين الراغبين في الزواج بخصوصية تامة وبإشراف وسيط أمين.",
+  description,
+  openGraph: {
+    title: "فَزَوِّجُوهُ",
+    description,
+    url: "/",
+    siteName: "فَزَوِّجُوهُ",
+    locale: "ar",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "فَزَوِّجُوهُ",
+    description,
+  },
 };
 
 export default function RootLayout({
