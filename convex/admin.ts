@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import { paginationOptsValidator } from "convex/server";
-import { mutation, query } from "./_generated/server";
+import { internalMutation, mutation, query } from "./_generated/server";
+import { components } from "./_generated/api";
 import { requireAdmin } from "./lib/helpers";
 
 const statusValidator = v.union(
@@ -78,6 +79,31 @@ export const reject = mutation({
       rejectionReason: args.reason,
     });
     return null;
+  },
+});
+
+// One-off maintenance: JWKS private keys were encrypted with a BETTER_AUTH_SECRET
+// that no longer matches, breaking login ("Failed to decrypt private key"). Delete
+// them so better-auth regenerates a keypair with the current secret. Existing sessions
+// are unaffected (email/password login mints new ones).
+// Run once against the broken deployment: npx convex run admin:clearJwks --prod
+export const clearJwks = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    let cursor: string | null = null;
+    let deleted = 0;
+    while (true) {
+      const res = await ctx.runMutation(components.betterAuth.adapter.deleteMany, {
+        input: { model: "jwks" },
+        paginationOpts: { numItems: 200, cursor },
+      });
+      deleted += res.count;
+      if (res.isDone) {
+        break;
+      }
+      cursor = res.continueCursor;
+    }
+    return { deleted };
   },
 });
 
