@@ -20,9 +20,9 @@
 
 @theme inline {
   --font-display: var(--font-amiri);
-  --font-sans: var(--font-plex);
+  --font-sans: var(--font-thmanyah-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-plex);
+  --font-heading: var(--font-thmanyah-sans);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-ring: var(--ring);

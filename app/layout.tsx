@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Amiri, Geist_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Amiri, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { thmanyahSans } from "@/fonts";
 import { Providers } from "@/components/providers";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -8,12 +9,6 @@ import { SiteHeader } from "@/components/site-header";
 const amiri = Amiri({
   variable: "--font-amiri",
   weight: ["400", "700"],
-  subsets: ["arabic", "latin"],
-});
-
-const plexArabic = IBM_Plex_Sans_Arabic({
-  variable: "--font-plex",
-  weight: ["400", "500", "700"],
   subsets: ["arabic", "latin"],
 });
 
@@ -37,7 +32,7 @@ export default function RootLayout({
     <html
       lang="ar"
       dir="rtl"
-      className={`${amiri.variable} ${plexArabic.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${amiri.variable} ${thmanyahSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground">
         <Providers>
