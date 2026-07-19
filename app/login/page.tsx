@@ -55,6 +55,9 @@ export default function LoginPage() {
               required
               dir="ltr"
               autoComplete="email"
+              spellCheck={false}
+              autoCapitalize="none"
+              autoCorrect="off"
               className="h-11 text-start"
             />
           </div>

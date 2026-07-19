@@ -4,6 +4,7 @@ export default function Home() {
   return (
     <>
       {/* الصفحة الرئيسية */}
+      <h1 className="sr-only">فَزَوِّجُوهُ — وساطة زواج شرعي في الأردن</h1>
       <style>{`
         @media (prefers-reduced-motion: no-preference) {
           .hero-fade-up {

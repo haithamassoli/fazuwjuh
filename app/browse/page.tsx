@@ -41,6 +41,7 @@ function FormCard({
 }) {
   return (
     <article className="flex flex-col rounded-md border border-sand bg-white p-5 shadow-[0_1px_2px_rgb(0_0_0_/_0.04)]">
+      <h3 className="sr-only">استمارة رقم {item.shortCode}</h3>
       <div className="flex items-start">
         <Seal code={item.shortCode} size={56} />
       </div>
@@ -152,7 +153,7 @@ function BrowseContent() {
       </header>
 
       {/* تبويبا الرجال والنساء */}
-      <div role="tablist" aria-label="نوع الاستمارات" className="mt-8 flex border-b border-sand">
+      <div role="group" aria-label="نوع الاستمارات" className="mt-8 flex border-b border-sand">
         {(
           [
             ["male", "رجال"],
@@ -161,8 +162,7 @@ function BrowseContent() {
         ).map(([value, label]) => (
           <button
             key={value}
-            role="tab"
-            aria-selected={type === value}
+            aria-pressed={type === value}
             onClick={() => switchType(value)}
             className={
               "-mb-px h-12 min-w-28 border-b-2 px-6 text-base font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-olive " +

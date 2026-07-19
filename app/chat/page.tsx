@@ -105,13 +105,13 @@ function ChatPanel() {
     <div className="mt-8 rounded-md border border-sand bg-white">
       <div
         ref={scrollRef}
-        className="flex max-h-[55vh] min-h-64 flex-col gap-3 overflow-y-auto p-4 sm:p-6"
+        className="flex max-h-[55vh] min-h-64 flex-col gap-3 overflow-y-auto overscroll-contain p-4 sm:p-6"
       >
         {status === "CanLoadMore" ? (
           <button
             type="button"
             onClick={() => loadMore(40)}
-            className="self-center rounded-md px-3 py-2 text-sm font-medium text-olive hover:text-olive-deep hover:underline"
+            className="inline-flex min-h-11 items-center self-center rounded-md px-3 py-2 text-sm font-medium text-olive hover:text-olive-deep hover:underline"
           >
             عرض رسائل أسبق
           </button>
@@ -135,7 +135,7 @@ function ChatPanel() {
 
       {error ? (
         <div className="border-t border-seal/30 bg-seal/5 px-4 py-3">
-          <p className="text-sm text-seal">{error}</p>
+          <p role="alert" className="text-sm text-seal">{error}</p>
         </div>
       ) : null}
 

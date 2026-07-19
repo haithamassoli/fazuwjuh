@@ -17,6 +17,7 @@ type Values = Record<string, string | string[]>;
 
 const STEP_LABELS = ["النوع", "المقدمة", "القسَم", "موافقة النشر", "الشروط", "الأسئلة"];
 const ARABIC_DIGITS = ["١", "٢", "٣", "٤", "٥", "٦"];
+const AUTOCOMPLETE: Record<string, string> = { name: "name", phone: "tel" };
 
 const linkButtonPrimary =
   "inline-flex h-11 items-center justify-center rounded-md bg-olive px-6 text-base font-medium text-paper transition-colors hover:bg-olive-deep";
@@ -112,6 +113,7 @@ function QuestionField({
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(q.id, e.target.value)}
           aria-invalid={invalid || undefined}
+          aria-describedby={invalid ? `e-${q.id}` : undefined}
           rows={4}
           className="min-h-24 bg-white"
         />
@@ -121,6 +123,7 @@ function QuestionField({
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(q.id, e.target.value)}
           aria-invalid={invalid || undefined}
+          aria-describedby={invalid ? `e-${q.id}` : undefined}
           className={selectClasses}
         >
           <option value="">— اختر —</option>
@@ -135,7 +138,7 @@ function QuestionField({
           {(q.options ?? []).map((opt) => {
             const selected = Array.isArray(value) ? value : [];
             return (
-              <label key={opt} className="flex min-h-9 cursor-pointer items-center gap-2 text-sm">
+              <label key={opt} className="flex min-h-11 cursor-pointer items-center gap-2 text-sm">
                 <input
                   type="checkbox"
                   checked={selected.includes(opt)}
@@ -145,7 +148,7 @@ function QuestionField({
                       e.target.checked ? [...selected, opt] : selected.filter((o) => o !== opt),
                     )
                   }
-                  className="size-4 accent-olive"
+                  className="size-5 accent-olive"
                 />
                 {opt}
               </label>
@@ -155,17 +158,27 @@ function QuestionField({
       ) : (
         <Input
           id={`f-${q.id}`}
-          type={q.type === "number" ? "number" : "text"}
-          inputMode={q.type === "number" ? "numeric" : undefined}
+          type={
+            q.type === "number" ? "number" : q.id === "phone" ? "tel" : "text"
+          }
+          inputMode={
+            q.type === "number"
+              ? "numeric"
+              : q.id === "phone"
+                ? "tel"
+                : undefined
+          }
+          autoComplete={AUTOCOMPLETE[q.id]}
           dir={q.type === "number" || q.id === "phone" ? "ltr" : undefined}
           value={typeof value === "string" ? value : ""}
           onChange={(e) => onChange(q.id, e.target.value)}
           aria-invalid={invalid || undefined}
+          aria-describedby={invalid ? `e-${q.id}` : undefined}
           className="h-11 bg-white text-start"
         />
       )}
       {invalid ? (
-        <p role="alert" className="text-sm text-destructive">
+        <p id={`e-${q.id}`} role="alert" className="text-sm text-destructive">
           {error}
         </p>
       ) : null}
@@ -317,6 +330,7 @@ function ApplyWizard() {
     const firstId = questions.find((q) => q.id in next)?.id;
     if (firstId) {
       document.getElementById(`q-${firstId}`)?.scrollIntoView({ block: "center" });
+      document.getElementById(`f-${firstId}`)?.focus({ preventScroll: true });
     }
     return firstId === undefined;
   }

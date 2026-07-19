@@ -83,7 +83,7 @@ function ExecuteAction({ requestId }: { requestId: Id<"deletionRequests"> }) {
         </DialogContent>
       </Dialog>
       {error ? (
-        <p className="mt-2 text-sm leading-6 text-seal">{error}</p>
+        <p role="alert" className="mt-2 text-sm leading-6 text-seal">{error}</p>
       ) : null}
     </div>
   );

@@ -114,7 +114,7 @@ function InterestArea({
               <Button
                 render={<Link href="/login" />}
                 nativeButton={false}
-                className="h-10"
+                className="h-11"
               >
                 دخول
               </Button>
@@ -122,7 +122,7 @@ function InterestArea({
                 render={<Link href="/register" />}
                 nativeButton={false}
                 variant="outline"
-                className="h-10"
+                className="h-11"
               >
                 إنشاء حساب
               </Button>
@@ -152,7 +152,10 @@ function InterestArea({
     );
   } else if (myInterest !== null) {
     body = (
-      <p className="rounded-md border border-olive/40 bg-olive/5 px-4 py-3 text-sm leading-6 text-olive-deep">
+      <p
+        role="status"
+        className="rounded-md border border-olive/40 bg-olive/5 px-4 py-3 text-sm leading-6 text-olive-deep"
+      >
         تم إرسال اهتمامك إلى الإدارة، وستتولى التنسيق
       </p>
     );
@@ -182,7 +185,7 @@ function InterestArea({
             </DialogHeader>
             <DialogFooter className="gap-2">
               <Button
-                className="h-10"
+                className="h-11"
                 disabled={pending}
                 onClick={confirmInterest}
               >
@@ -190,7 +193,7 @@ function InterestArea({
               </Button>
               <Button
                 variant="outline"
-                className="h-10"
+                className="h-11"
                 disabled={pending}
                 onClick={() => setConfirmOpen(false)}
               >
@@ -206,7 +209,10 @@ function InterestArea({
   return (
     <div className="mt-10 border-t border-sand pt-8 text-center">
       {error === null ? null : (
-        <p className="mb-4 rounded-md border border-seal/40 bg-seal/5 px-4 py-3 text-sm leading-6 text-seal">
+        <p
+          role="alert"
+          className="mb-4 rounded-md border border-seal/40 bg-seal/5 px-4 py-3 text-sm leading-6 text-seal"
+        >
           {error}
         </p>
       )}

@@ -215,7 +215,7 @@ function PendingActions({ formId }: { formId: Id<"forms"> }) {
           </DialogContent>
         </Dialog>
       </div>
-      {error ? <p className="mt-3 text-sm text-seal">{error}</p> : null}
+      {error ? <p role="alert" className="mt-3 text-sm text-seal">{error}</p> : null}
     </div>
   );
 }

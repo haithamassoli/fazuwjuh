@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Amiri, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { thmanyahSans } from "@/fonts";
 import { Providers } from "@/components/providers";
+import { PwaInstall } from "@/components/pwa-install";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 
@@ -24,6 +25,12 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://fazuwjuh.assoli.site"),
   title: "فَزَوِّجُوهُ",
   description,
+  applicationName: "فَزَوِّجُوهُ",
+  appleWebApp: {
+    capable: true,
+    title: "فَزَوِّجُوهُ",
+    statusBarStyle: "default",
+  },
   openGraph: {
     title: "فَزَوِّجُوهُ",
     description,
@@ -39,6 +46,11 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#44624f",
+  colorScheme: "light",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -51,11 +63,18 @@ export default function RootLayout({
       className={`${amiri.variable} ${thmanyahSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:start-2 focus:z-50 focus:rounded-md focus:bg-olive focus:px-4 focus:py-2 focus:text-paper"
+        >
+          تخطَّ إلى المحتوى
+        </a>
         <Providers>
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          <main id="main" className="flex-1">{children}</main>
           <SiteFooter />
         </Providers>
+        <PwaInstall />
       </body>
     </html>
   );

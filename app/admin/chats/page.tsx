@@ -73,7 +73,10 @@ function InboxRowButton({
           {relativeTime(row.lastMessageAt)}
         </span>
         {row.adminUnread > 0 ? (
-          <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-seal px-1.5 py-0.5 font-mono text-xs text-paper">
+          <span
+            aria-label={`${row.adminUnread} رسائل غير مقروءة`}
+            className="inline-flex min-w-5 items-center justify-center rounded-full bg-seal px-1.5 py-0.5 font-mono text-xs text-paper"
+          >
             {row.adminUnread}
           </span>
         ) : null}
@@ -127,7 +130,7 @@ function Composer({ userId }: { userId: string }) {
           {busy ? "…جارٍ الإرسال" : "إرسال"}
         </Button>
       </div>
-      {error ? <p className="mt-2 text-sm text-seal">{error}</p> : null}
+      {error ? <p role="alert" className="mt-2 text-sm text-seal">{error}</p> : null}
     </div>
   );
 }
